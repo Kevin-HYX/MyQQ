@@ -1,6 +1,6 @@
 {
   "name": "myqq",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "MyQQ - 简约群聊天应用",
   "main": "server.js",
   "scripts": {
