@@ -9,8 +9,11 @@
 <body>
     <div class="chat-container">
         <div class="chat-header">
-            <h1>MyQQ群聊天</h1>
-            <span class="online-count">在线: <span id="onlineCount">0</span></span>
+            <h1 data-i18n="title">MyQQ群聊天</h1>
+            <div class="header-controls">
+                <button id="langToggle" class="lang-btn" title="切换语言">中文/EN</button>
+                <span class="online-count"><span data-i18n="online">在线</span>: <span id="onlineCount">0</span></span>
+            </div>
         </div>
         
         <div class="chat-messages" id="chatMessages">
@@ -19,8 +22,8 @@
         
         <div class="chat-input-container">
             <div class="input-area">
-                <input type="text" id="messageInput" placeholder="输入消息..." maxlength="500">
-                <button id="sendButton">发送</button>
+                <input type="text" id="messageInput" data-i18n-placeholder="placeholder" placeholder="输入消息..." maxlength="500">
+                <button id="sendButton" data-i18n="send">发送</button>
             </div>
         </div>
     </div>

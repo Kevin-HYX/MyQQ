@@ -21,9 +21,25 @@ wss.on('connection', (ws) => {
     const username = `用户${userId.slice(-4)}`;
     users.set(ws, { id: userId, username });
     
+    // 发送在线人数更新
+    const onlineCount = Array.from(wss.clients).filter(c => c.readyState === WebSocket.OPEN).length;
+    wss.clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify({
+                type: 'onlineCount',
+                count: onlineCount
+            }));
+        }
+    });
+    
     ws.send(JSON.stringify({
         type: 'history',
         messages: messages
+    }));
+    
+    ws.send(JSON.stringify({
+        type: 'onlineCount',
+        count: onlineCount
     }));
     
     const joinMessage = {
@@ -89,6 +105,17 @@ wss.on('connection', (ws) => {
             
             users.delete(ws);
             console.log(`${user.username}断开连接`);
+            
+            // 更新在线人数
+            const onlineCount = Array.from(wss.clients).filter(c => c.readyState === WebSocket.OPEN).length;
+            wss.clients.forEach(client => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({
+                        type: 'onlineCount',
+                        count: onlineCount
+                    }));
+                }
+            });
         }
     });
     

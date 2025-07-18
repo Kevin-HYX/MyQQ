@@ -2,12 +2,52 @@ class MyQQClient {
     constructor() {
         this.ws = null;
         this.username = null;
+        this.currentLang = 'zh';
+        this.translations = {
+            zh: {
+                title: 'MyQQ群聊天',
+                online: '在线',
+                placeholder: '输入消息...',
+                send: '发送',
+                welcome: '欢迎来到MyQQ群聊天室！',
+                joined: '加入了群聊',
+                left: '离开了群聊'
+            },
+            en: {
+                title: 'MyQQ Group Chat',
+                online: 'Online',
+                placeholder: 'Type a message...',
+                send: 'Send',
+                welcome: 'Welcome to MyQQ Group Chat!',
+                joined: 'joined the group',
+                left: 'left the group'
+            }
+        };
         this.init();
     }
 
     init() {
         this.connect();
         this.setupEventListeners();
+        this.applyLanguage();
+    }
+
+    applyLanguage() {
+        const t = this.translations[this.currentLang];
+        
+        document.querySelector('[data-i18n="title"]').textContent = t.title;
+        document.querySelector('[data-i18n="online"]').textContent = t.online;
+        document.querySelector('[data-i18n="placeholder"]').placeholder = t.placeholder;
+        document.querySelector('[data-i18n="send"]').textContent = t.send;
+        
+        // 更新欢迎消息
+        const welcomeMsg = document.querySelector('.system-message');
+        if (welcomeMsg) welcomeMsg.textContent = t.welcome;
+    }
+
+    switchLanguage() {
+        this.currentLang = this.currentLang === 'zh' ? 'en' : 'zh';
+        this.applyLanguage();
     }
 
     connect() {
@@ -50,6 +90,9 @@ class MyQQClient {
             case 'message':
                 this.addMessage(data);
                 break;
+            case 'onlineCount':
+                this.updateOnlineCount(data.count);
+                break;
         }
     }
 
@@ -66,19 +109,24 @@ class MyQQClient {
     addMessage(message, animate = true) {
         const messagesContainer = document.getElementById('chatMessages');
         const messageDiv = document.createElement('div');
-        messageDiv.className = 'message';
         
-        const time = new Date(message.timestamp).toLocaleTimeString('zh-CN', {
+        // 判断消息是否是我方发送的
+        const isOwnMessage = message.username === this.username;
+        messageDiv.className = `message ${isOwnMessage ? 'own' : 'other'}`;
+        
+        const time = new Date(message.timestamp).toLocaleTimeString(this.currentLang === 'zh' ? 'zh-CN' : 'en-US', {
             hour: '2-digit',
             minute: '2-digit'
         });
 
         messageDiv.innerHTML = `
-            <div class="message-header">
-                <span class="message-username">${message.username}</span>
-                <span class="message-time">${time}</span>
+            <div class="message-content">
+                <div class="message-header">
+                    <span class="message-username">${message.username}</span>
+                    <span class="message-time">${time}</span>
+                </div>
+                <div class="message-text">${this.escapeHtml(message.message)}</div>
             </div>
-            <div class="message-content">${this.escapeHtml(message.message)}</div>
         `;
 
         if (animate) {
@@ -112,6 +160,7 @@ class MyQQClient {
     setupEventListeners() {
         const input = document.getElementById('messageInput');
         const sendButton = document.getElementById('sendButton');
+        const langToggle = document.getElementById('langToggle');
 
         sendButton.addEventListener('click', () => this.sendMessage());
         
@@ -124,11 +173,11 @@ class MyQQClient {
         input.addEventListener('input', () => {
             sendButton.disabled = !input.value.trim();
         });
+
+        langToggle.addEventListener('click', () => this.switchLanguage());
     }
 
-    updateOnlineCount() {
-        // 简单的在线人数显示，实际应用中可通过服务器推送
-        const count = Math.floor(Math.random() * 10) + 1;
+    updateOnlineCount(count) {
         document.getElementById('onlineCount').textContent = count;
     }
 
