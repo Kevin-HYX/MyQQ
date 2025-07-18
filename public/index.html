@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyQQ群聊天</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>MyQQ群聊天</h1>
+            <span class="online-count">在线: <span id="onlineCount">0</span></span>
+        </div>
+        
+        <div class="chat-messages" id="chatMessages">
+            <div class="system-message">欢迎来到MyQQ群聊天室！</div>
+        </div>
+        
+        <div class="chat-input-container">
+            <div class="input-area">
+                <input type="text" id="messageInput" placeholder="输入消息..." maxlength="500">
+                <button id="sendButton">发送</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

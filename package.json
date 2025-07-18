@@ -1,0 +1,22 @@
+{
+  "name": "myqq",
+  "version": "1.0.0",
+  "description": "MyQQ - 简约群聊天应用",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "chat",
+    "myqq",
+    "websocket",
+    "group-chat"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2",
+    "ws": "^8.18.3"
+  }
+}
